@@ -1,0 +1,96 @@
+version: '2'
+services:
+  elasticsearch-node1:
+    image: elasticsearch
+    container_name: elasticsearch-node1
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=node1" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "node.data=true"
+      -E "bootstrap.memory_lock=true"
+    ports:
+      - "9100:9100"
+      - "9200:9200"
+      - "9300:9300"      
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata1:/opt/elasticsearch/data
+    networks:
+      es:
+        ipv4_address: 192.16.0.11
+
+  elasticsearch-node2:
+    image: elasticsearch
+    container_name: elasticsearch-node2
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=node2" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "node.data=true"
+      -E "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata2:/opt/elasticsearch/data
+    networks:
+      es:
+        ipv4_address: 192.16.0.12
+
+  elasticsearch-node3:
+    image: elasticsearch
+    container_name: elasticsearch-node3
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=node3" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "node.data=true"
+      -E "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata3:/opt/elasticsearch/data
+    networks:
+      es:
+        ipv4_address: 192.16.0.13
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+  esdata3:
+    driver: local
+
+networks:
+  es:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.16.0.0/24
+          gateway: 192.16.0.1
