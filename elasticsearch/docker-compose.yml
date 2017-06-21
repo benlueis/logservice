@@ -1,5 +1,6 @@
 version: '2'
-services:
+
+services:  
   elasticsearch-node1:
     image: elasticsearch
     container_name: elasticsearch-node1
@@ -8,27 +9,26 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     command: >
       elasticsearch 
-      -E "node.name=node1" 
+      -E "node.name=es-node1" 
       -E "cluster.name=es-docker-cluster" 
       -E "network.host=0.0.0.0"
       -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
       -E "node.data=true"
       -E "bootstrap.memory_lock=true"
-    ports:
-      - "9100:9100"
-      - "9200:9200"
-      - "9300:9300"      
     ulimits:
       memlock:
         soft: -1
         hard: -1
     mem_limit: 1g
+    ports:
+      - "9100:9100"
+      - "9201:9200"
+      - "9301:9300"
     volumes:
       - esdata1:/opt/elasticsearch/data
     networks:
       es:
         ipv4_address: 192.16.0.11
-
   elasticsearch-node2:
     image: elasticsearch
     container_name: elasticsearch-node2
@@ -37,7 +37,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     command: >
       elasticsearch 
-      -E "node.name=node2" 
+      -E "node.name=es-node2" 
       -E "cluster.name=es-docker-cluster" 
       -E "network.host=0.0.0.0"
       -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
@@ -48,12 +48,14 @@ services:
         soft: -1
         hard: -1
     mem_limit: 1g
+    ports:
+      - "9202:9200"
+      - "9302:9300"
     volumes:
       - esdata2:/opt/elasticsearch/data
     networks:
       es:
         ipv4_address: 192.16.0.12
-
   elasticsearch-node3:
     image: elasticsearch
     container_name: elasticsearch-node3
@@ -62,7 +64,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     command: >
       elasticsearch 
-      -E "node.name=node3" 
+      -E "node.name=es-node3" 
       -E "cluster.name=es-docker-cluster" 
       -E "network.host=0.0.0.0"
       -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
@@ -73,11 +75,70 @@ services:
         soft: -1
         hard: -1
     mem_limit: 1g
+    ports:
+      - "9203:9200"
+      - "9303:9300"
     volumes:
       - esdata3:/opt/elasticsearch/data
     networks:
       es:
         ipv4_address: 192.16.0.13
+  
+  elasticsearch-ingester:
+    image: elasticsearch
+    container_name: elasticsearch-ingester
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-ingester" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "bootstrap.memory_lock=true"
+      -E "node.master=false"
+      -E "node.data=false"
+      -E "node.ingest=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9221:9200"
+      - "9321:9300"
+    networks:
+      es:
+        ipv4_address: 192.16.0.21
+ 
+  elasticsearch-coordinator:
+    image: elasticsearch
+    container_name: elasticsearch-coordinator
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-coordinator"
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "bootstrap.memory_lock=true"
+      -E "node.master=false"
+      -E "node.data=false"
+      -E "node.ingest=false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9222:9200"
+      - "9322:9300"
+    networks:
+      es:
+        ipv4_address: 192.16.0.22
 
 volumes:
   esdata1:
