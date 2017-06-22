@@ -1,5 +1,5 @@
-FROM logstash:5
+FROM logstash:latest
 
-COPY logstash.conf /some/config-dir/
+COPY /conf/techplatform_app_log_test.conf /some/config-dir/
 
-CMD ["-f", "/some/config-dir/logstash.conf"]
+CMD ["-f", "/some/config-dir/techplatform_app_log_test.conf"]
