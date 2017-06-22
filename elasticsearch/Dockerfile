@@ -8,9 +8,9 @@ RUN mv node-v8.1.2-linux-x64 node
 ENV PATH $PATH:/opt/node/bin
 
 WORKDIR /usr/share/elasticsearch/plugins
-RUN git clone git://github.com/mobz/elasticsearch-head.git \
+RUN git clone https://github.com/mobz/elasticsearch-head.git \
     && cd elasticsearch-head \
-    && npm install \
+    && npm install -g cnpm --registry=https://registry.npm.taobao.org \
     && npm install grunt --save
 
 WORKDIR /usr/share/elasticsearch
