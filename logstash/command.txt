@@ -1,0 +1,1 @@
+docker build . michelin/logstash-techplatform-app-log-test:latest
