@@ -1,0 +1,295 @@
+version: '2'
+
+services: 
+  zoo1:
+    image: zookeeper
+    container_name: zoo1
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "2181:2181"
+    environment: 
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888  
+    networks:
+      default:
+        ipv4_address: 192.16.0.2
+
+  zoo2:
+    image: zookeeper
+    container_name: zoo2
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "2182:2181"
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+    networks:
+      default:
+        ipv4_address: 192.16.0.3
+
+  zoo3:
+    image: zookeeper
+    container_name: zoo3
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "2183:2181"
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+    networks:
+      default:
+        ipv4_address: 192.16.0.4
+
+  kafka1:
+    image: wurstmeister/kafka
+    container_name: kafka1
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9092:9092"
+    links:
+      - zoo1
+      - zoo2
+      - zoo3
+    environment:
+      BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
+      KAFKA_ADVERTISED_HOST_NAME: 139.219.198.205
+      KAFKA_ADVERTISED_PORT: 9092
+    networks:
+      default:
+        ipv4_address: 192.16.0.5
+
+  kafka2:
+    image: wurstmeister/kafka
+    container_name: kafka2
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9093:9093"
+    links:
+      - zoo1
+      - zoo2
+      - zoo3
+    environment:
+      BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
+      KAFKA_ADVERTISED_HOST_NAME: 139.219.198.205
+      KAFKA_ADVERTISED_PORT: 9093      
+    networks:
+      default:
+        ipv4_address: 192.16.0.6
+
+  kafka3:
+    image: wurstmeister/kafka
+    container_name: kafka3
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9094:9094"
+    links:
+      - zoo1
+      - zoo2
+      - zoo3
+    environment:
+      BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
+      KAFKA_ADVERTISED_HOST_NAME: 139.219.198.205
+      KAFKA_ADVERTISED_PORT: 9094
+    networks:
+      default:
+        ipv4_address: 192.16.0.7
+
+  elasticsearch-node1:
+    image: elasticsearch
+    container_name: elasticsearch-node1
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-node1" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "node.data=true"
+      -E "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9100:9100"
+      - "9201:9200"
+      - "9301:9300"
+    volumes:
+      - esdata1:/opt/elasticsearch/data
+    networks:
+      default:
+        ipv4_address: 192.16.0.11
+  elasticsearch-node2:
+    image: elasticsearch
+    container_name: elasticsearch-node2
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-node2" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "node.data=true"
+      -E "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9202:9200"
+      - "9302:9300"
+    volumes:
+      - esdata2:/opt/elasticsearch/data
+    networks:
+      default:
+        ipv4_address: 192.16.0.12
+  elasticsearch-node3:
+    image: elasticsearch
+    container_name: elasticsearch-node3
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-node3" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "node.data=true"
+      -E "bootstrap.memory_lock=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9203:9200"
+      - "9303:9300"
+    volumes:
+      - esdata3:/opt/elasticsearch/data
+    networks:
+      default:
+        ipv4_address: 192.16.0.13
+  
+  elasticsearch-ingester:
+    image: elasticsearch
+    container_name: elasticsearch-ingester
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-ingester" 
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "bootstrap.memory_lock=true"
+      -E "node.master=false"
+      -E "node.data=false"
+      -E "node.ingest=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9221:9200"
+      - "9321:9300"
+    networks:
+      default:
+        ipv4_address: 192.16.0.21
+ 
+  elasticsearch-coordinator:
+    image: elasticsearch
+    container_name: elasticsearch-coordinator
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    command: >
+      elasticsearch 
+      -E "node.name=es-coordinator"
+      -E "cluster.name=es-docker-cluster" 
+      -E "network.host=0.0.0.0"
+      -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
+      -E "bootstrap.memory_lock=true"
+      -E "node.master=false"
+      -E "node.data=false"
+      -E "node.ingest=false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9222:9200"
+      - "9322:9300"
+    networks:
+      default:
+        ipv4_address: 192.16.0.22
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+  esdata3:
+    driver: local
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.16.0.0/24
+          gateway: 192.16.0.1
