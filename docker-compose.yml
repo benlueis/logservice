@@ -17,9 +17,6 @@ services:
     environment: 
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888  
-    networks:
-      default:
-        ipv4_address: 192.16.0.2
 
   zoo2:
     image: zookeeper
@@ -37,9 +34,6 @@ services:
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
-    networks:
-      default:
-        ipv4_address: 192.16.0.3
 
   zoo3:
     image: zookeeper
@@ -57,9 +51,6 @@ services:
     environment:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
-    networks:
-      default:
-        ipv4_address: 192.16.0.4
 
   kafka1:
     image: wurstmeister/kafka
@@ -83,9 +74,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
       KAFKA_ADVERTISED_HOST_NAME: 139.219.198.205
       KAFKA_ADVERTISED_PORT: 9092
-    networks:
-      default:
-        ipv4_address: 192.16.0.5
 
   kafka2:
     image: wurstmeister/kafka
@@ -108,10 +96,7 @@ services:
       BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
       KAFKA_ADVERTISED_HOST_NAME: 139.219.198.205
-      KAFKA_ADVERTISED_PORT: 9093      
-    networks:
-      default:
-        ipv4_address: 192.16.0.6
+      KAFKA_ADVERTISED_PORT: 9093
 
   kafka3:
     image: wurstmeister/kafka
@@ -135,9 +120,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
       KAFKA_ADVERTISED_HOST_NAME: 139.219.198.205
       KAFKA_ADVERTISED_PORT: 9094
-    networks:
-      default:
-        ipv4_address: 192.16.0.7
 
   elasticsearch-node1:
     image: elasticsearch
