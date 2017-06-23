@@ -1,0 +1,1 @@
+docker run -it --name logstash-tech-platform-app-log-test --network "logservice_default" michelin/logstash-techplatform-app-log-test:latest
