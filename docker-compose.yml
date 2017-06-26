@@ -31,8 +31,25 @@ services:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
 
-  kafka:
+  kafka1:
     image: wurstmeister/kafka
+    container_name: kafka1
+    restart: always
+    ports:
+      - "9091:9092"
+    links:
+      - zoo1
+      - zoo2
+      - zoo3
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
+      KAFKA_ADVERTISED_HOST_NAME: 42.159.252.14
+      KAFKA_ADVERTISED_PORT: 9091
+
+  kafka2:
+    image: wurstmeister/kafka
+    container_name: kafka2
     restart: always
     ports:
       - "9092:9092"
@@ -41,9 +58,26 @@ services:
       - zoo2
       - zoo3
     environment:
+      KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
       KAFKA_ADVERTISED_HOST_NAME: 42.159.252.14
       KAFKA_ADVERTISED_PORT: 9092
+
+  kafka3:
+    image: wurstmeister/kafka
+    container_name: kafka3
+    restart: always
+    ports:
+      - "9093:9092"
+    links:
+      - zoo1
+      - zoo2
+      - zoo3
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2181,zoo3:2181
+      KAFKA_ADVERTISED_HOST_NAME: 42.159.252.14
+      KAFKA_ADVERTISED_PORT: 9093
 
   elasticsearch-node1:
     image: elasticsearch
