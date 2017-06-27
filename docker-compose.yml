@@ -37,6 +37,10 @@ services:
     restart: always
     ports:
       - "9091:9092"
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
     links:
       - zoo1
       - zoo2
@@ -53,6 +57,10 @@ services:
     restart: always
     ports:
       - "9092:9092"
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
     links:
       - zoo1
       - zoo2
@@ -69,6 +77,10 @@ services:
     restart: always
     ports:
       - "9093:9092"
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
     links:
       - zoo1
       - zoo2
@@ -99,7 +111,6 @@ services:
         hard: -1
     mem_limit: 1g
     ports:
-      - "9100:9100"
       - "9201:9200"
       - "9301:9300"
     volumes:
@@ -184,6 +195,7 @@ services:
         hard: -1
     mem_limit: 1g
     ports:
+      - "9100:9100"
       - "9221:9200"
       - "9321:9300"
     networks:
