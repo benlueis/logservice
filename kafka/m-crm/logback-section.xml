@@ -2,12 +2,12 @@
     <appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
         <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} --- [%thread] %logger{50} : %msg%n</pattern>                
-                <charset>UTF-8</charset>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} --- [%thread] %logger{50} : %msg%n</pattern>     
+                <charset>UTF-8</charset>           
             </layout>
         </encoder>
 
-        <topic>tpapplogs</topic>
+        <topic>mcrmapplogs</topic>
         <!-- we don't care how the log messages will be partitioned  -->
         <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
 
