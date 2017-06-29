@@ -105,6 +105,8 @@ services:
       -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
       -E "node.data=true"
       -E "bootstrap.memory_lock=true"
+      -E "http.cors.enabled=true"
+      -E "http.cors.allow-origin=*"
     ulimits:
       memlock:
         soft: -1
@@ -132,6 +134,8 @@ services:
       -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
       -E "node.data=true"
       -E "bootstrap.memory_lock=true"
+      -E "http.cors.enabled=true"
+      -E "http.cors.allow-origin=*"
     ulimits:
       memlock:
         soft: -1
@@ -159,6 +163,8 @@ services:
       -E "discovery.zen.ping.unicast.hosts=192.16.0.11,192.16.0.12,192.16.0.13" 
       -E "node.data=true"
       -E "bootstrap.memory_lock=true"
+      -E "http.cors.enabled=true"
+      -E "http.cors.allow-origin=*"
     ulimits:
       memlock:
         soft: -1
@@ -189,6 +195,8 @@ services:
       -E "node.master=false"
       -E "node.data=false"
       -E "node.ingest=true"
+      -E "http.cors.enabled=true"
+      -E "http.cors.allow-origin=*"
     ulimits:
       memlock:
         soft: -1
@@ -218,6 +226,8 @@ services:
       -E "node.master=false"
       -E "node.data=false"
       -E "node.ingest=false"
+      -E "http.cors.enabled=true"
+      -E "http.cors.allow-origin=*"
     ulimits:
       memlock:
         soft: -1
