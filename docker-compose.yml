@@ -110,12 +110,15 @@ services:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     mem_limit: 1g
     ports:
       - "9201:9200"
       - "9301:9300"
     volumes:
-      - esdata1:/opt/elasticsearch/data
+      - esdata1:/usr/share/elasticsearch/data
     networks:
       default:
         ipv4_address: 192.16.0.11
@@ -138,12 +141,15 @@ services:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     mem_limit: 1g
     ports:
       - "9202:9200"
       - "9302:9300"
     volumes:
-      - esdata2:/opt/elasticsearch/data
+      - esdata2:/usr/share/elasticsearch/data
     networks:
       default:
         ipv4_address: 192.16.0.12
@@ -166,12 +172,15 @@ services:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     mem_limit: 1g
     ports:
       - "9203:9200"
       - "9303:9300"
     volumes:
-      - esdata3:/opt/elasticsearch/data
+      - esdata3:/usr/share/elasticsearch/data
     networks:
       default:
         ipv4_address: 192.16.0.13
@@ -198,9 +207,11 @@ services:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     mem_limit: 1g
     ports:
-      - "9100:9100"
       - "9221:9200"
       - "9321:9300"
     networks:
@@ -229,6 +240,9 @@ services:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     mem_limit: 1g
     ports:
       - "9222:9200"
